@@ -3,284 +3,882 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Yen Language</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Ubuntu&display=swap" rel="stylesheet">
+  <title>YEN Language - Modern Systems Programming</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0b0f10;
-      --fg: #e0e0e0;
-      --accent: #00ffe0;
-      --highlight: #1a1f22;
-      --border: #293133;
+      --bg-dark: #0a0e1a;
+      --bg-darker: #050810;
+      --bg-card: #0f1419;
+      --fg: #e0e6f0;
+      --fg-muted: #8892a6;
+      --accent: #00d4ff;
+      --accent-glow: rgba(0, 212, 255, 0.3);
+      --accent-secondary: #00ffa3;
+      --border: #1a2332;
+      --shadow: rgba(0, 0, 0, 0.4);
     }
+
     * {
       box-sizing: border-box;
-    }
-    body {
       margin: 0;
-      font-family: 'Fira Code', monospace;
-      background-color: var(--bg);
-      color: var(--fg);
-      line-height: 1.6;
+      padding: 0;
     }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg-dark);
+      color: var(--fg);
+      line-height: 1.7;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Animated background */
+    .bg-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.15;
+      background:
+        radial-gradient(circle at 20% 50%, var(--accent-glow) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(0, 255, 163, 0.2) 0%, transparent 50%);
+      animation: bgPulse 15s ease-in-out infinite alternate;
+    }
+
+    @keyframes bgPulse {
+      0% { transform: scale(1) translateY(0); }
+      100% { transform: scale(1.1) translateY(-20px); }
+    }
+
+    /* Navigation */
     header {
-      background-color: #101417;
-      padding: 1.5rem 2rem;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(10, 14, 26, 0.85);
+      backdrop-filter: blur(20px);
+      padding: 1.2rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid var(--border);
-      box-shadow: 0 2px 10px rgba(0, 255, 224, 0.05);
+      z-index: 1000;
+      transition: all 0.3s ease;
     }
+
+    header.scrolled {
+      padding: 0.8rem 2rem;
+      box-shadow: 0 4px 20px rgba(0, 212, 255, 0.1);
+    }
+
     header h1 {
-      margin: 0;
-      font-size: 2rem;
-      color: var(--accent);
-      letter-spacing: 1px;
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-secondary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 0.5px;
     }
+
+    nav {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
     nav a {
-      color: #ccc;
-      margin-left: 1.2rem;
+      color: var(--fg-muted);
       text-decoration: none;
-      font-weight: bold;
-      transition: color 0.2s ease-in-out;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      position: relative;
     }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
+      transition: width 0.3s ease;
+    }
+
     nav a:hover {
-      color: white;
+      color: var(--accent);
     }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    .btn-github {
+      padding: 0.6rem 1.4rem;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-secondary) 100%);
+      border-radius: 8px;
+      color: var(--bg-dark) !important;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px var(--accent-glow);
+    }
+
+    .btn-github:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px var(--accent-glow);
+    }
+
+    .btn-github::after {
+      display: none;
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 8rem 2rem 4rem;
+      position: relative;
+    }
+
+    .hero h2 {
+      font-size: 4rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: fadeInUp 1s ease;
+    }
+
+    .hero .subtitle {
+      font-size: 1.4rem;
+      color: var(--fg-muted);
+      margin-bottom: 2.5rem;
+      animation: fadeInUp 1s ease 0.2s both;
+      max-width: 600px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1.5rem;
+      animation: fadeInUp 1s ease 0.4s both;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn {
+      padding: 1rem 2.5rem;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-secondary) 100%);
+      color: var(--bg-dark);
+      box-shadow: 0 6px 20px var(--accent-glow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px var(--accent-glow);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--accent);
+      border: 2px solid var(--accent);
+    }
+
+    .btn-secondary:hover {
+      background: var(--accent);
+      color: var(--bg-dark);
+      transform: translateY(-3px);
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Stats Section */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      margin: 4rem auto;
+      max-width: 1000px;
+      padding: 0 2rem;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      padding: 2rem;
+      border-radius: 15px;
+      border: 1px solid var(--border);
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent);
+      box-shadow: 0 10px 30px rgba(0, 212, 255, 0.15);
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-secondary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stat-label {
+      color: var(--fg-muted);
+      font-size: 0.95rem;
+      margin-top: 0.5rem;
+    }
+
+    /* Main Content */
     main {
-      padding: 2.5rem;
-      max-width: 900px;
+      padding: 4rem 2rem;
+      max-width: 1200px;
       margin: auto;
     }
+
     section {
-      margin-bottom: 3rem;
+      margin-bottom: 6rem;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s ease;
     }
+
+    section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
     h2 {
-      color: var(--accent);
-      font-size: 1.6rem;
-      border-bottom: 2px solid var(--border);
-      padding-bottom: 0.4rem;
-      margin-bottom: 1rem;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-secondary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
-    ul {
-      list-style-type: '➤ ';
-      padding-left: 1.5rem;
+
+    /* Feature Grid */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
     }
-    .badge {
-      display: inline-block;
-      margin-top: 1rem;
-    }
-    footer {
-      text-align: center;
+
+    .feature-card {
+      background: var(--bg-card);
       padding: 2rem;
-      color: #666;
-      border-top: 1px solid var(--border);
-      background-color: #0a0a0a;
-      font-size: 0.9rem;
-    }
-    code, pre {
-      background: var(--highlight);
-      color: #00ffcc;
-      padding: 0.8rem 1rem;
-      border-radius: 6px;
-      font-size: 0.95rem;
-      display: block;
-      white-space: pre-wrap;
-      overflow-x: auto;
-    }
-    a.button-link {
-      display: inline-block;
-      margin-top: 1rem;
-      padding: 0.6rem 1rem;
-      border: 1px solid var(--accent);
-      border-radius: 5px;
-      color: var(--accent);
-      text-decoration: none;
-      transition: 0.3s;
-    }
-    a.button-link:hover {
-      background-color: var(--accent);
-      color: #000;
-    }
-    .window {
-      width: 100%;
-      max-width: 800px;
-      margin: 0 auto;
-      background: #2c3e50;
-      border-radius: 5px;
-      box-shadow: 10px 10px 10px #111;
+      border-radius: 15px;
+      border: 1px solid var(--border);
+      transition: all 0.3s ease;
+      position: relative;
       overflow: hidden;
     }
-    .controls {
-      height: 40px;
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .feature-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent);
+      box-shadow: 0 10px 30px rgba(0, 212, 255, 0.15);
+    }
+
+    .feature-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .feature-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--fg);
+    }
+
+    .feature-desc {
+      color: var(--fg-muted);
+      line-height: 1.6;
+    }
+
+    /* Code Terminal */
+    .terminal {
+      background: var(--bg-darker);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px var(--shadow);
+      border: 1px solid var(--border);
+      margin-top: 2rem;
+    }
+
+    .terminal-header {
+      background: #1a1f2e;
+      padding: 0.8rem 1rem;
       display: flex;
       align-items: center;
-      padding: 0 10px;
-      background: #2c3e50;
-      border-bottom: 1px solid #444;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--border);
     }
-    .buttons {
-      display: flex;
-      gap: 6px;
-      margin-left: auto;
-    }
-    .buttons .close { background: #e74c3c; }
-    .buttons .maximize { background: #f1c40f; }
-    .buttons .minimize { background: #2ecc71; }
-    .buttons div {
+
+    .terminal-btn {
       width: 12px;
       height: 12px;
       border-radius: 50%;
-      background: #999;
     }
-    .bash {
-      background: #34495e;
-      color: #00ff90;
-      padding: 1.2rem;
+
+    .terminal-btn.close { background: #ff5f56; }
+    .terminal-btn.minimize { background: #ffbd2e; }
+    .terminal-btn.maximize { background: #27c93f; }
+
+    .terminal-title {
+      margin-left: auto;
+      color: var(--fg-muted);
+      font-size: 0.85rem;
+      font-family: 'Fira Code', monospace;
+    }
+
+    .terminal-body {
+      padding: 1.5rem;
       font-family: 'Fira Code', monospace;
       font-size: 0.9rem;
-      white-space: pre-wrap;
-      height: 480px;
+      line-height: 1.6;
+      max-height: 500px;
       overflow-y: auto;
+    }
+
+    .terminal-body pre {
+      margin: 0;
+    }
+
+    /* Syntax highlighting */
+    .keyword { color: #ff79c6; }
+    .function { color: #50fa7b; }
+    .string { color: #f1fa8c; }
+    .comment { color: #6272a4; font-style: italic; }
+    .number { color: #bd93f9; }
+
+    /* Install section */
+    .install-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .step {
+      background: var(--bg-card);
+      padding: 1.5rem;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      position: relative;
+    }
+
+    .step-number {
+      position: absolute;
+      top: -15px;
+      left: 20px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+      color: var(--bg-dark);
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      box-shadow: 0 4px 10px var(--accent-glow);
+    }
+
+    .step h3 {
+      margin-top: 0.5rem;
+      margin-bottom: 0.8rem;
+      color: var(--accent);
+    }
+
+    .step code {
+      background: var(--bg-darker);
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      color: var(--accent-secondary);
+    }
+
+    /* Footer */
+    footer {
+      background: var(--bg-darker);
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    footer p {
+      color: var(--fg-muted);
+      margin-bottom: 1rem;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      margin-top: 1.5rem;
+    }
+
+    .social-links a {
+      color: var(--fg-muted);
+      font-size: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .social-links a:hover {
+      color: var(--accent);
+      transform: translateY(-3px);
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-darker);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--accent);
+      border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent-secondary);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero h2 {
+        font-size: 2.5rem;
+      }
+
+      .hero .subtitle {
+        font-size: 1.1rem;
+      }
+
+      nav {
+        gap: 1rem;
+      }
+
+      .feature-grid,
+      .install-steps {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Typing cursor effect */
+    .typing-cursor {
+      display: inline-block;
+      width: 3px;
+      height: 1.2em;
+      background: var(--accent);
+      margin-left: 5px;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
     }
   </style>
 </head>
 <body>
+  <div class="bg-animation"></div>
 
-  <header>
-    <h1>Yen Language</h1>
+  <header id="header">
+    <h1>YEN</h1>
     <nav>
       <a href="#about">About</a>
       <a href="#features">Features</a>
-      <a href="#getting-started">Getting Started</a>
+      <a href="#install">Install</a>
       <a href="#example">Example</a>
-      <a href="#contributing">Contribute</a>
-      <a href="https://github.com/yen-lang/Yen" target="_blank">GitHub</a>
+      <a href="#docs">Docs</a>
+      <a href="https://github.com/yen-lang/Yen" target="_blank" class="btn-github">GitHub →</a>
     </nav>
   </header>
 
+  <section class="hero">
+    <h2>Modern Systems Programming<span class="typing-cursor"></span></h2>
+    <p class="subtitle">
+      A statically-typed language combining performance with modern features like pattern matching, lambdas, and memory safety.
+    </p>
+    <div class="hero-buttons">
+      <a href="#install" class="btn btn-primary">Get Started</a>
+      <a href="#example" class="btn btn-secondary">See Examples</a>
+    </div>
+
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-number" data-target="12">0</div>
+        <div class="stat-label">Standard Libraries</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">AOT</div>
+        <div class="stat-label">LLVM Compilation</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">95%</div>
+        <div class="stat-label">C Performance</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">0</div>
+        <div class="stat-label">Garbage Collection</div>
+      </div>
+    </div>
+  </section>
+
   <main>
     <section id="about">
-      <h2>About</h2>
-      <p>Yen is a lightweight, expressive, and interpreted programming language inspired by Python, Nim, C++, and Rust. Built with performance and simplicity in mind, Yen aims to bring structure and clarity to scripting.</p>
-      <div class="badge">
-        <img src="https://img.shields.io/badge/Code%2040%25%20AI%20-%2060%25%20Human-blueviolet?style=for-the-badge&logo=openai&logoColor=white" alt="AI Badge" />
-      </div>
+      <h2>Why YEN?</h2>
+      <p style="color: var(--fg-muted); font-size: 1.1rem; max-width: 800px;">
+        YEN is designed for developers who want the performance of systems programming with the expressiveness of modern languages.
+        It combines zero-cost abstractions, memory safety without garbage collection, and a powerful type system.
+      </p>
     </section>
 
     <section id="features">
       <h2>Features</h2>
-      <ul>
-        <li>🧠 Variables, Functions, Structs and Classes</li>
-        <li>🔄 Match, Switch, Loops and Conditions</li>
-        <li>🧩 Enum support</li>
-        <li>🛠️ Dynamic typing with runtime safety</li>
-        <li>📥 Built-in input/output and standard operations</li>
-        <li>🌐 Linux supported (Windows/macOS coming soon)</li>
-      </ul>
-    </section>
-
-    <section id="getting-started">
-      <h2>Getting Started</h2>
-      <p>To build and run a Yen program on Linux:</p>
-      <pre><code>git clone https://github.com/yen-lang/Yen
-cd Yen
-g++ -std=c++17 -o yen main.cpp lexer.cpp parser.cpp compiler.cpp
-./yen examples/hello_world.yl</code></pre>
-    </section>
-
-    <section id="example">
-      <h2>Example Program</h2>
-      <div class="window">
-        <div class="controls">
-          <span style="color: #eee; font-weight: bold">Terminal - Yen</span>
-          <div class="buttons">
-            <div class="close"></div>
-            <div class="maximize"></div>
-            <div class="minimize"></div>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🎯</div>
+          <div class="feature-title">Pattern Matching</div>
+          <div class="feature-desc">
+            Powerful pattern matching with guards, ranges, and destructuring for expressive code flow control.
           </div>
         </div>
-        <div class="bash">
-# Single-line comment
 
-/* Block comment
-   still running
-   ends here */
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <div class="feature-title">Zero-Cost Abstractions</div>
+          <div class="feature-desc">
+            High-level features that compile down to efficient machine code with no runtime overhead.
+          </div>
+        </div>
 
-func greet(name) {
-    print "Hello, " + name + "!";
-}
+        <div class="feature-card">
+          <div class="feature-icon">🛡️</div>
+          <div class="feature-title">Memory Safety</div>
+          <div class="feature-desc">
+            RAII-style defer statements and ownership system prevent memory leaks and data races.
+          </div>
+        </div>
 
-func add(a, b) {
-    return a + b;
-}
+        <div class="feature-card">
+          <div class="feature-icon">🚀</div>
+          <div class="feature-title">LLVM Backend</div>
+          <div class="feature-desc">
+            Compile to native executables with world-class optimizations from the LLVM compiler infrastructure.
+          </div>
+        </div>
 
-func check_age(age) {
-    if (age >= 18) {
-        print "You are an adult.";
-    } else {
-        print "You are a minor.";
-    }
-}
+        <div class="feature-card">
+          <div class="feature-icon">📦</div>
+          <div class="feature-title">Rich Standard Library</div>
+          <div class="feature-desc">
+            12+ modules including IO, networking, crypto, encoding, and system operations out of the box.
+          </div>
+        </div>
 
-func types_and_casting() {
-    let text = "123";
-    let integer = int(text);
-    let decimal = float("3.14");
-    let boolean = bool("true");
-    let converted = str(999);
-
-    print "Original text: " + text;
-    print "Converted to int: " + integer;
-    print "Converted to float: " + decimal;
-    print "Converted to bool: " + boolean;
-    print "Converted to string: " + converted;
-
-    let sum = integer + 7;
-    print "Sum (int + int): " + sum;
-
-    let total = decimal + 2.86;
-    print "Sum (float + float): " + total;
-
-    let mixed = "Value: " + total;
-    print mixed;
-}
-
-func interact() {
-    let name = input("What is your name?");
-    let age = input<int>("How old are you?");
-
-    greet(name);
-    check_age(age);
-
-    let result = add(10, 5);
-    print "10 + 5 = " + result;
-
-    types_and_casting();
-}
-
-interact();
+        <div class="feature-card">
+          <div class="feature-icon">🔧</div>
+          <div class="feature-title">Dual Execution</div>
+          <div class="feature-desc">
+            Fast iteration with the interpreter or deploy with the AOT compiler for maximum performance.
+          </div>
         </div>
       </div>
     </section>
 
-    <section id="contributing">
-      <h2>Contributing</h2>
-      <p>We welcome contributions!</p>
-      <p>Fork the repo, make your changes, and submit a pull request.</p>
-      <p>See <a href="https://github.com/yen-lang/Yen/blob/main/CONTRIBUTING.md" target="_blank">CONTRIBUTING.md</a> for full contribution guidelines.</p>
+    <section id="install">
+      <h2>Getting Started</h2>
+      <div class="install-steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>Clone Repository</h3>
+          <p>Get the latest version from GitHub</p>
+          <code>git clone https://github.com/yen-lang/Yen</code>
+        </div>
+
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>Build</h3>
+          <p>Compile using CMake</p>
+          <code>mkdir build && cd build<br>cmake .. && make</code>
+        </div>
+
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>Run</h3>
+          <p>Execute your first program</p>
+          <code>./yen hello.yen</code>
+        </div>
+      </div>
     </section>
 
-    <section id="license">
-      <h2>License</h2>
-      <p>Yen Language is open-source under the MIT License.</p>
+    <section id="example">
+      <h2>Code Example</h2>
+      <div class="terminal">
+        <div class="terminal-header">
+          <div class="terminal-btn close"></div>
+          <div class="terminal-btn minimize"></div>
+          <div class="terminal-btn maximize"></div>
+          <div class="terminal-title">hello.yen</div>
+        </div>
+        <div class="terminal-body">
+          <pre><code><span class="comment">// Pattern matching with ranges and guards</span>
+<span class="keyword">match</span> (score) {
+    <span class="number">0</span>..<span class="number">60</span> =&gt; <span class="function">print</span> <span class="string">"F"</span>;
+    <span class="number">60</span>..<span class="number">70</span> =&gt; <span class="function">print</span> <span class="string">"D"</span>;
+    <span class="number">70</span>..<span class="number">80</span> =&gt; <span class="function">print</span> <span class="string">"C"</span>;
+    <span class="number">80</span>..<span class="number">90</span> =&gt; <span class="function">print</span> <span class="string">"B"</span>;
+    <span class="number">90</span>..=<span class="number">100</span> =&gt; <span class="function">print</span> <span class="string">"A"</span>;
+    _ =&gt; <span class="function">print</span> <span class="string">"Invalid"</span>;
+}
+
+<span class="comment">// Lambda expressions with closures</span>
+<span class="keyword">var</span> multiplier = <span class="number">10</span>;
+<span class="keyword">let</span> multiply = |x| x * multiplier;
+<span class="function">print</span> <span class="function">multiply</span>(<span class="number">5</span>);  <span class="comment">// 50</span>
+
+<span class="comment">// RAII-style resource management</span>
+<span class="keyword">func</span> <span class="function">process</span>() {
+    <span class="keyword">defer</span> <span class="function">print</span> <span class="string">"Cleanup!"</span>;  <span class="comment">// Executes on scope exit</span>
+    <span class="comment">// ... work ...</span>
+}
+
+<span class="comment">// Shell command execution</span>
+<span class="keyword">var</span> files = <span class="function">process_shell</span>(<span class="string">"ls -la"</span>);
+<span class="function">print</span> files;
+
+<span class="comment">// File I/O</span>
+<span class="keyword">var</span> content = <span class="function">io_read_file</span>(<span class="string">"data.txt"</span>);
+<span class="keyword">var</span> lines = <span class="function">str_split</span>(content, <span class="string">"\n"</span>);
+<span class="keyword">for</span> line <span class="keyword">in</span> lines {
+    <span class="function">log_info</span>(<span class="string">"Processing: "</span> + line);
+}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section id="docs">
+      <h2>Documentation</h2>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">📖</div>
+          <div class="feature-title">Language Syntax</div>
+          <div class="feature-desc">
+            Complete reference for YEN's syntax, from variables to advanced pattern matching.
+          </div>
+          <a href="docs/SYNTAX.md" class="btn btn-secondary" style="margin-top: 1rem; display: inline-block;">Read Docs →</a>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📚</div>
+          <div class="feature-title">Standard Library</div>
+          <div class="feature-desc">
+            Explore all 12 built-in modules with examples and API references.
+          </div>
+          <a href="docs/STDLIB.md" class="btn btn-secondary" style="margin-top: 1rem; display: inline-block;">View API →</a>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">💻</div>
+          <div class="feature-title">Examples</div>
+          <div class="feature-desc">
+            Learn from real-world examples covering shell automation, networking, and more.
+          </div>
+          <a href="examples/" class="btn btn-secondary" style="margin-top: 1rem; display: inline-block;">Browse →</a>
+        </div>
+      </div>
     </section>
   </main>
 
   <footer>
-    © 2025 — Made with ❤️ and 🤖 by the Yen Language team.
+    <p>Built with ❤️ by the YEN Language team</p>
+    <p style="font-size: 0.9rem;">Licensed under MIT • © 2025 YEN Programming Language</p>
+    <div class="social-links">
+      <a href="https://github.com/yen-lang/Yen" target="_blank" title="GitHub">⭐</a>
+      <a href="https://github.com/yen-lang/Yen/issues" target="_blank" title="Issues">🐛</a>
+      <a href="https://github.com/yen-lang/Yen/discussions" target="_blank" title="Discussions">💬</a>
+    </div>
   </footer>
 
+  <script>
+    // Scroll animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -100px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('section').forEach(section => {
+      observer.observe(section);
+    });
+
+    // Header scroll effect
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+
+    // Animated counters
+    const animateCounter = (element) => {
+      const target = parseInt(element.getAttribute('data-target'));
+      const duration = 2000;
+      const increment = target / (duration / 16);
+      let current = 0;
+
+      const updateCounter = () => {
+        current += increment;
+        if (current < target) {
+          element.textContent = Math.floor(current);
+          requestAnimationFrame(updateCounter);
+        } else {
+          element.textContent = target;
+        }
+      };
+
+      updateCounter();
+    };
+
+    // Trigger counters when visible
+    const statsObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const counter = entry.target.querySelector('[data-target]');
+          if (counter && !counter.classList.contains('animated')) {
+            counter.classList.add('animated');
+            animateCounter(counter);
+          }
+        }
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.stat-card').forEach(card => {
+      statsObserver.observe(card);
+    });
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
+    // Typing effect for hero
+    const cursorElement = document.querySelector('.typing-cursor');
+    setInterval(() => {
+      cursorElement.style.opacity = cursorElement.style.opacity === '0' ? '1' : '0';
+    }, 500);
+
+    // Add parallax effect to background
+    window.addEventListener('scroll', () => {
+      const scrolled = window.pageYOffset;
+      const bg = document.querySelector('.bg-animation');
+      bg.style.transform = `translateY(${scrolled * 0.5}px)`;
+    });
+
+    // Terminal code typing effect (optional, commented out for performance)
+    /*
+    const terminalBody = document.querySelector('.terminal-body code');
+    const originalText = terminalBody.innerHTML;
+    terminalBody.innerHTML = '';
+
+    let i = 0;
+    const typeWriter = () => {
+      if (i < originalText.length) {
+        terminalBody.innerHTML += originalText.charAt(i);
+        i++;
+        setTimeout(typeWriter, 10);
+      }
+    };
+
+    const terminalObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !entry.target.classList.contains('typed')) {
+          entry.target.classList.add('typed');
+          typeWriter();
+        }
+      });
+    }, { threshold: 0.5 });
+
+    terminalObserver.observe(document.querySelector('.terminal'));
+    */
+  </script>
 </body>
 </html>

@@ -3,146 +3,152 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>YEN Language - Modern Systems Programming</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <title>YEN - Modern Expressive Programming Language</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-dark: #0a0e1a;
-      --bg-darker: #050810;
-      --bg-card: #0f1419;
-      --fg: #e0e6f0;
-      --fg-muted: #8892a6;
-      --accent: #00d4ff;
-      --accent-glow: rgba(0, 212, 255, 0.3);
-      --accent-secondary: #00ffa3;
-      --border: #1a2332;
-      --shadow: rgba(0, 0, 0, 0.4);
+      --bg-dark: #06090f;
+      --bg-surface: #0c1017;
+      --bg-card: #111820;
+      --bg-card-hover: #151d27;
+      --fg: #e4eaf4;
+      --fg-muted: #7a8ba0;
+      --fg-dim: #4a5568;
+      --accent: #00c8ff;
+      --accent-secondary: #00e89d;
+      --accent-warm: #fbbf24;
+      --accent-pink: #f472b6;
+      --gradient-main: linear-gradient(135deg, #00c8ff 0%, #00e89d 100%);
+      --gradient-warm: linear-gradient(135deg, #fbbf24 0%, #f472b6 100%);
+      --border: rgba(255, 255, 255, 0.06);
+      --border-hover: rgba(0, 200, 255, 0.3);
+      --glow: rgba(0, 200, 255, 0.15);
+      --glow-strong: rgba(0, 200, 255, 0.4);
+      --radius: 16px;
+      --radius-sm: 10px;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--bg-dark);
       color: var(--fg);
       line-height: 1.7;
       overflow-x: hidden;
-      position: relative;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* Animated background */
-    .bg-animation {
+    /* ===== BACKGROUND ===== */
+    .bg-grid {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
+      z-index: -2;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    .bg-glow {
+      position: fixed;
+      inset: 0;
       z-index: -1;
-      opacity: 0.15;
+      opacity: 0.4;
       background:
-        radial-gradient(circle at 20% 50%, var(--accent-glow) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(0, 255, 163, 0.2) 0%, transparent 50%);
-      animation: bgPulse 15s ease-in-out infinite alternate;
+        radial-gradient(ellipse 800px 600px at 20% 20%, rgba(0, 200, 255, 0.08) 0%, transparent 70%),
+        radial-gradient(ellipse 600px 800px at 80% 80%, rgba(0, 232, 157, 0.06) 0%, transparent 70%);
+      animation: glowDrift 20s ease-in-out infinite alternate;
     }
 
-    @keyframes bgPulse {
-      0% { transform: scale(1) translateY(0); }
-      100% { transform: scale(1.1) translateY(-20px); }
+    @keyframes glowDrift {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(-30px, -20px) scale(1.05); }
     }
 
-    /* Navigation */
+    /* ===== NAVIGATION ===== */
     header {
       position: fixed;
       top: 0;
       width: 100%;
-      background: rgba(10, 14, 26, 0.85);
-      backdrop-filter: blur(20px);
-      padding: 1.2rem 2rem;
+      background: rgba(6, 9, 15, 0.7);
+      backdrop-filter: blur(24px) saturate(1.4);
+      -webkit-backdrop-filter: blur(24px) saturate(1.4);
+      padding: 0 2rem;
+      height: 64px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid var(--border);
       z-index: 1000;
-      transition: all 0.3s ease;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     header.scrolled {
-      padding: 0.8rem 2rem;
-      box-shadow: 0 4px 20px rgba(0, 212, 255, 0.1);
+      background: rgba(6, 9, 15, 0.92);
+      box-shadow: 0 1px 30px rgba(0, 200, 255, 0.06);
     }
 
-    header h1 {
-      font-size: 1.8rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-secondary) 100%);
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      background: var(--gradient-main);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      letter-spacing: 0.5px;
     }
 
-    nav {
-      display: flex;
-      gap: 2rem;
-      align-items: center;
+    .logo span {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0;
+      color: var(--fg-muted);
+      -webkit-text-fill-color: var(--fg-muted);
+      margin-left: 8px;
+      vertical-align: middle;
     }
+
+    nav { display: flex; gap: 0.5rem; align-items: center; }
 
     nav a {
       color: var(--fg-muted);
       text-decoration: none;
       font-weight: 500;
-      font-size: 0.95rem;
-      transition: all 0.3s ease;
-      position: relative;
-    }
-
-    nav a::after {
-      content: '';
-      position: absolute;
-      bottom: -5px;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
-      transition: width 0.3s ease;
-    }
-
-    nav a:hover {
-      color: var(--accent);
-    }
-
-    nav a:hover::after {
-      width: 100%;
-    }
-
-    .btn-github {
-      padding: 0.6rem 1.4rem;
-      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-secondary) 100%);
+      font-size: 0.88rem;
+      padding: 0.4rem 0.9rem;
       border-radius: 8px;
+      transition: all 0.25s ease;
+    }
+
+    nav a:hover { color: var(--fg); background: rgba(255,255,255,0.05); }
+
+    .nav-cta {
+      background: var(--gradient-main) !important;
       color: var(--bg-dark) !important;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 15px var(--accent-glow);
+      font-weight: 600 !important;
+      padding: 0.5rem 1.2rem !important;
+      box-shadow: 0 2px 12px var(--glow);
     }
 
-    .btn-github:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 25px var(--accent-glow);
+    .nav-cta:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px var(--glow-strong) !important;
     }
 
-    .btn-github::after {
+    /* Mobile menu */
+    .menu-toggle {
       display: none;
+      background: none;
+      border: none;
+      color: var(--fg);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0.5rem;
     }
 
-    /* Hero Section */
+    /* ===== HERO ===== */
     .hero {
       min-height: 100vh;
       display: flex;
@@ -150,134 +156,181 @@
       justify-content: center;
       align-items: center;
       text-align: center;
-      padding: 8rem 2rem 4rem;
+      padding: 7rem 2rem 4rem;
       position: relative;
     }
 
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1rem 0.4rem 0.6rem;
+      background: rgba(0, 200, 255, 0.08);
+      border: 1px solid rgba(0, 200, 255, 0.15);
+      border-radius: 100px;
+      font-size: 0.82rem;
+      color: var(--accent);
+      margin-bottom: 2rem;
+      animation: fadeInDown 0.8s ease;
+    }
+
+    .hero-badge .badge-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--accent-secondary);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
     .hero h2 {
-      font-size: 4rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-      background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
+      font-size: clamp(2.8rem, 6vw, 5rem);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 0.5rem;
+      letter-spacing: -2px;
+      animation: fadeInUp 0.8s ease;
+    }
+
+    .hero h2 .gradient-text {
+      background: var(--gradient-main);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      animation: fadeInUp 1s ease;
     }
 
     .hero .subtitle {
-      font-size: 1.4rem;
+      font-size: clamp(1rem, 2vw, 1.25rem);
       color: var(--fg-muted);
       margin-bottom: 2.5rem;
-      animation: fadeInUp 1s ease 0.2s both;
-      max-width: 600px;
+      max-width: 580px;
+      line-height: 1.7;
+      animation: fadeInUp 0.8s ease 0.15s both;
     }
 
     .hero-buttons {
       display: flex;
-      gap: 1.5rem;
-      animation: fadeInUp 1s ease 0.4s both;
+      gap: 1rem;
       flex-wrap: wrap;
       justify-content: center;
+      animation: fadeInUp 0.8s ease 0.3s both;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-16px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .btn {
-      padding: 1rem 2.5rem;
-      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85rem 2rem;
+      border-radius: var(--radius-sm);
       text-decoration: none;
       font-weight: 600;
-      font-size: 1rem;
-      transition: all 0.3s ease;
+      font-size: 0.95rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       cursor: pointer;
       border: none;
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-secondary) 100%);
+      background: var(--gradient-main);
       color: var(--bg-dark);
-      box-shadow: 0 6px 20px var(--accent-glow);
+      box-shadow: 0 4px 20px var(--glow);
     }
 
     .btn-primary:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 30px var(--accent-glow);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px var(--glow-strong);
     }
 
     .btn-secondary {
-      background: transparent;
-      color: var(--accent);
-      border: 2px solid var(--accent);
+      background: rgba(255,255,255,0.04);
+      color: var(--fg);
+      border: 1px solid var(--border);
     }
 
     .btn-secondary:hover {
-      background: var(--accent);
+      background: rgba(255,255,255,0.08);
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+    }
+
+    .btn-course {
+      background: var(--gradient-warm);
       color: var(--bg-dark);
-      transform: translateY(-3px);
+      box-shadow: 0 4px 20px rgba(251, 191, 36, 0.2);
     }
 
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .btn-course:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(251, 191, 36, 0.35);
     }
 
-    /* Stats Section */
+    /* ===== STATS ===== */
     .stats {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 2rem;
-      margin: 4rem auto;
-      max-width: 1000px;
-      padding: 0 2rem;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      margin: 5rem auto 0;
+      max-width: 800px;
+      width: 100%;
+      background: var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      animation: fadeInUp 0.8s ease 0.45s both;
     }
 
-    .stat-card {
-      background: var(--bg-card);
-      padding: 2rem;
-      border-radius: 15px;
-      border: 1px solid var(--border);
+    .stat {
+      background: var(--bg-surface);
+      padding: 2rem 1.5rem;
       text-align: center;
-      transition: all 0.3s ease;
+      transition: background 0.3s ease;
     }
 
-    .stat-card:hover {
-      transform: translateY(-5px);
-      border-color: var(--accent);
-      box-shadow: 0 10px 30px rgba(0, 212, 255, 0.15);
-    }
+    .stat:hover { background: var(--bg-card); }
 
-    .stat-number {
-      font-size: 2.5rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-secondary) 100%);
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+      background: var(--gradient-main);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      margin-bottom: 0.3rem;
     }
 
     .stat-label {
       color: var(--fg-muted);
-      font-size: 0.95rem;
-      margin-top: 0.5rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
-    /* Main Content */
-    main {
-      padding: 4rem 2rem;
+    /* ===== SECTIONS ===== */
+    .container {
       max-width: 1200px;
-      margin: auto;
+      margin: 0 auto;
+      padding: 0 2rem;
     }
 
     section {
-      margin-bottom: 6rem;
+      padding: 6rem 0;
       opacity: 0;
       transform: translateY(30px);
-      transition: all 0.8s ease;
+      transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     section.visible {
@@ -285,30 +338,55 @@
       transform: translateY(0);
     }
 
-    h2 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 1.5rem;
-      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-secondary) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+      margin-bottom: 1rem;
     }
 
-    /* Feature Grid */
+    .section-label::before {
+      content: '';
+      width: 20px;
+      height: 2px;
+      background: var(--gradient-main);
+      border-radius: 2px;
+    }
+
+    h2 {
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+
+    .section-desc {
+      color: var(--fg-muted);
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin-bottom: 3rem;
+      line-height: 1.7;
+    }
+
+    /* ===== FEATURE GRID ===== */
     .feature-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
-      margin-top: 2rem;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.25rem;
     }
 
     .feature-card {
       background: var(--bg-card);
       padding: 2rem;
-      border-radius: 15px;
+      border-radius: var(--radius);
       border: 1px solid var(--border);
-      transition: all 0.3s ease;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
       overflow: hidden;
     }
@@ -316,569 +394,1084 @@
     .feature-card::before {
       content: '';
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 3px;
-      background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
-      transform: scaleX(0);
-      transition: transform 0.3s ease;
-    }
-
-    .feature-card:hover::before {
-      transform: scaleX(1);
+      inset: 0;
+      border-radius: var(--radius);
+      padding: 1px;
+      background: linear-gradient(135deg, transparent, transparent);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      transition: background 0.35s ease;
+      pointer-events: none;
     }
 
     .feature-card:hover {
-      transform: translateY(-5px);
-      border-color: var(--accent);
-      box-shadow: 0 10px 30px rgba(0, 212, 255, 0.15);
+      transform: translateY(-4px);
+      background: var(--bg-card-hover);
+      border-color: transparent;
+    }
+
+    .feature-card:hover::before {
+      background: var(--gradient-main);
     }
 
     .feature-icon {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 1.2rem;
+      background: rgba(0, 200, 255, 0.08);
+      border: 1px solid rgba(0, 200, 255, 0.1);
+    }
+
+    .feature-icon.warm {
+      background: rgba(251, 191, 36, 0.08);
+      border-color: rgba(251, 191, 36, 0.1);
+    }
+
+    .feature-icon.pink {
+      background: rgba(244, 114, 182, 0.08);
+      border-color: rgba(244, 114, 182, 0.1);
+    }
+
+    .feature-icon.green {
+      background: rgba(0, 232, 157, 0.08);
+      border-color: rgba(0, 232, 157, 0.1);
     }
 
     .feature-title {
-      font-size: 1.3rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
-      color: var(--fg);
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
     }
 
     .feature-desc {
       color: var(--fg-muted);
+      font-size: 0.92rem;
       line-height: 1.6;
     }
 
-    /* Code Terminal */
-    .terminal {
-      background: var(--bg-darker);
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 20px 60px var(--shadow);
-      border: 1px solid var(--border);
+    /* ===== CODE EXAMPLES ===== */
+    .code-showcase {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
       margin-top: 2rem;
     }
 
+    .terminal {
+      background: var(--bg-surface);
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      transition: all 0.3s ease;
+    }
+
+    .terminal:hover {
+      border-color: var(--border-hover);
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+    }
+
     .terminal-header {
-      background: #1a1f2e;
-      padding: 0.8rem 1rem;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 0.75rem 1rem;
       display: flex;
       align-items: center;
       gap: 0.5rem;
       border-bottom: 1px solid var(--border);
     }
 
-    .terminal-btn {
-      width: 12px;
-      height: 12px;
+    .terminal-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .terminal-dot {
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
     }
 
-    .terminal-btn.close { background: #ff5f56; }
-    .terminal-btn.minimize { background: #ffbd2e; }
-    .terminal-btn.maximize { background: #27c93f; }
+    .terminal-dot.r { background: #ff5f57; }
+    .terminal-dot.y { background: #febc2e; }
+    .terminal-dot.g { background: #28c840; }
 
     .terminal-title {
       margin-left: auto;
-      color: var(--fg-muted);
-      font-size: 0.85rem;
-      font-family: 'Fira Code', monospace;
+      color: var(--fg-dim);
+      font-size: 0.78rem;
+      font-family: 'JetBrains Mono', monospace;
     }
 
     .terminal-body {
-      padding: 1.5rem;
-      font-family: 'Fira Code', monospace;
-      font-size: 0.9rem;
-      line-height: 1.6;
-      max-height: 500px;
-      overflow-y: auto;
+      padding: 1.25rem 1.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      line-height: 1.7;
+      overflow-x: auto;
     }
 
-    .terminal-body pre {
-      margin: 0;
-    }
+    .terminal-body pre { margin: 0; white-space: pre; }
 
     /* Syntax highlighting */
-    .keyword { color: #ff79c6; }
-    .function { color: #50fa7b; }
-    .string { color: #f1fa8c; }
-    .comment { color: #6272a4; font-style: italic; }
-    .number { color: #bd93f9; }
+    .kw { color: #c792ea; }
+    .fn { color: #82aaff; }
+    .str { color: #c3e88d; }
+    .cmt { color: #546e7a; font-style: italic; }
+    .num { color: #f78c6c; }
+    .op { color: #89ddff; }
+    .type { color: #ffcb6b; }
+    .var { color: #eeffff; }
+    .prop { color: #f07178; }
 
-    /* Install section */
-    .install-steps {
+    /* ===== MODULES SECTION ===== */
+    .modules-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-      margin-top: 2rem;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 0.75rem;
     }
 
-    .step {
+    .module-card {
       background: var(--bg-card);
-      padding: 1.5rem;
-      border-radius: 12px;
+      padding: 1.2rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: default;
+    }
+
+    .module-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(0, 200, 255, 0.08);
+    }
+
+    .module-icon {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .module-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 0.25rem;
+    }
+
+    .module-desc {
+      font-size: 0.75rem;
+      color: var(--fg-muted);
+    }
+
+    /* ===== COURSE SECTION ===== */
+    .course-banner {
+      background: var(--bg-card);
+      border: 1px solid rgba(251, 191, 36, 0.15);
+      border-radius: var(--radius);
+      padding: 3rem;
+      display: flex;
+      align-items: center;
+      gap: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .course-banner::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gradient-warm);
+    }
+
+    .course-banner::after {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(251, 191, 36, 0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .course-content { flex: 1; }
+
+    .course-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--accent-warm);
+      margin-bottom: 1rem;
+    }
+
+    .course-content h3 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.5px;
+    }
+
+    .course-content p {
+      color: var(--fg-muted);
+      font-size: 1rem;
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+      max-width: 500px;
+    }
+
+    .course-features {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+
+    .course-feat {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+      color: var(--fg-muted);
+    }
+
+    .course-feat .check {
+      color: var(--accent-secondary);
+      font-weight: bold;
+    }
+
+    /* ===== INSTALL ===== */
+    .install-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .install-step {
+      background: var(--bg-card);
+      padding: 2rem;
+      border-radius: var(--radius);
       border: 1px solid var(--border);
       position: relative;
     }
 
-    .step-number {
-      position: absolute;
-      top: -15px;
-      left: 20px;
-      background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
-      color: var(--bg-dark);
-      width: 35px;
-      height: 35px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      box-shadow: 0 4px 10px var(--accent-glow);
-    }
-
-    .step h3 {
-      margin-top: 0.5rem;
-      margin-bottom: 0.8rem;
-      color: var(--accent);
-    }
-
-    .step code {
-      background: var(--bg-darker);
-      padding: 0.3rem 0.6rem;
-      border-radius: 4px;
-      font-size: 0.85rem;
-      color: var(--accent-secondary);
-    }
-
-    /* Footer */
-    footer {
-      background: var(--bg-darker);
-      padding: 3rem 2rem;
-      border-top: 1px solid var(--border);
-      text-align: center;
-    }
-
-    footer p {
-      color: var(--fg-muted);
+    .step-num {
+      font-size: 3rem;
+      font-weight: 900;
+      background: var(--gradient-main);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      opacity: 0.3;
+      line-height: 1;
       margin-bottom: 1rem;
     }
 
-    .social-links {
+    .install-step h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .install-step p {
+      color: var(--fg-muted);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .install-step code {
+      display: block;
+      background: var(--bg-dark);
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--accent-secondary);
+      border: 1px solid var(--border);
+      word-break: break-all;
+    }
+
+    /* ===== HOF SECTION ===== */
+    .hof-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 0.5rem;
+    }
+
+    .hof-item {
+      background: var(--bg-card);
+      padding: 0.8rem 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--accent);
+      text-align: center;
+      transition: all 0.25s ease;
+    }
+
+    .hof-item:hover {
+      border-color: var(--border-hover);
+      background: var(--bg-card-hover);
+    }
+
+    /* ===== DOCS ===== */
+    .docs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .doc-card {
+      background: var(--bg-card);
+      padding: 2rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.3s ease;
+      display: block;
+    }
+
+    .doc-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .doc-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .doc-card p {
+      color: var(--fg-muted);
+      font-size: 0.88rem;
+      line-height: 1.6;
+    }
+
+    .doc-card .arrow {
+      color: var(--accent);
+      margin-top: 1rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      transition: gap 0.2s ease;
+    }
+
+    .doc-card:hover .arrow { gap: 0.6rem; }
+
+    /* ===== FOOTER ===== */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 3rem 2rem;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-left p {
+      color: var(--fg-muted);
+      font-size: 0.85rem;
+    }
+
+    .footer-left p:first-child {
+      color: var(--fg);
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+
+    .footer-links {
       display: flex;
       gap: 1.5rem;
-      justify-content: center;
-      margin-top: 1.5rem;
     }
 
-    .social-links a {
+    .footer-links a {
       color: var(--fg-muted);
-      font-size: 1.5rem;
-      transition: all 0.3s ease;
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.2s;
     }
 
-    .social-links a:hover {
-      color: var(--accent);
-      transform: translateY(-3px);
-    }
+    .footer-links a:hover { color: var(--accent); }
 
-    /* Scrollbar */
-    ::-webkit-scrollbar {
-      width: 10px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: var(--bg-darker);
-    }
-
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-dark); }
     ::-webkit-scrollbar-thumb {
-      background: var(--accent);
-      border-radius: 5px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+      .code-showcase { grid-template-columns: 1fr; }
+      .install-grid { grid-template-columns: 1fr; }
+      .course-banner { flex-direction: column; gap: 2rem; padding: 2rem; }
     }
 
-    ::-webkit-scrollbar-thumb:hover {
-      background: var(--accent-secondary);
-    }
-
-    /* Responsive */
     @media (max-width: 768px) {
-      .hero h2 {
-        font-size: 2.5rem;
-      }
-
-      .hero .subtitle {
-        font-size: 1.1rem;
-      }
+      header { padding: 0 1rem; }
 
       nav {
-        gap: 1rem;
+        display: none;
+        position: absolute;
+        top: 64px;
+        left: 0;
+        right: 0;
+        background: rgba(6, 9, 15, 0.97);
+        backdrop-filter: blur(24px);
+        flex-direction: column;
+        padding: 1rem;
+        border-bottom: 1px solid var(--border);
+        gap: 0.25rem;
       }
 
-      .feature-grid,
-      .install-steps {
-        grid-template-columns: 1fr;
+      nav.open { display: flex; }
+      .menu-toggle { display: block; }
+
+      .hero { padding: 6rem 1.5rem 3rem; }
+      .hero h2 { letter-spacing: -1px; }
+
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .feature-grid { grid-template-columns: 1fr; }
+      .modules-grid { grid-template-columns: repeat(2, 1fr); }
+      .hof-grid { grid-template-columns: repeat(2, 1fr); }
+      .docs-grid { grid-template-columns: 1fr; }
+
+      .footer-inner {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.5rem;
       }
+
+      .container { padding: 0 1.25rem; }
+      section { padding: 4rem 0; }
     }
 
-    /* Typing cursor effect */
-    .typing-cursor {
-      display: inline-block;
-      width: 3px;
-      height: 1.2em;
-      background: var(--accent);
-      margin-left: 5px;
-      animation: blink 1s infinite;
-    }
-
-    @keyframes blink {
-      0%, 50% { opacity: 1; }
-      51%, 100% { opacity: 0; }
+    @media (max-width: 480px) {
+      .stats { grid-template-columns: 1fr 1fr; }
+      .hero-buttons { flex-direction: column; align-items: center; }
+      .btn { width: 100%; justify-content: center; }
+      .course-features { flex-direction: column; gap: 0.5rem; }
     }
   </style>
 </head>
 <body>
-  <div class="bg-animation"></div>
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
 
+  <!-- Navigation -->
   <header id="header">
-    <h1>YEN</h1>
+    <div class="logo">YEN <span>v1.0</span></div>
+    <button class="menu-toggle" onclick="document.querySelector('nav').classList.toggle('open')" aria-label="Toggle menu">&#9776;</button>
     <nav>
-      <a href="#about">About</a>
       <a href="#features">Features</a>
+      <a href="#examples">Examples</a>
+      <a href="#modules">Modules</a>
+      <a href="#course">Course</a>
       <a href="#install">Install</a>
-      <a href="#example">Example</a>
       <a href="#docs">Docs</a>
-      <a href="https://github.com/yen-lang/Yen" target="_blank" class="btn-github">GitHub →</a>
+      <a href="https://github.com/yen-lang/Yen" target="_blank" class="nav-cta">GitHub</a>
     </nav>
   </header>
 
-  <section class="hero">
-    <h2>Modern Systems Programming<span class="typing-cursor"></span></h2>
+  <!-- Hero -->
+  <section class="hero" style="opacity:1;transform:none;">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      v1.0 Released &mdash; 39 Tests Passing
+    </div>
+
+    <h2>Write Code That<br><span class="gradient-text">Feels Natural</span></h2>
     <p class="subtitle">
-      A statically-typed language combining performance with modern features like pattern matching, lambdas, and memory safety.
+      A modern, expressive programming language with pattern matching, lambdas, pipes, goroutines, and 12+ built-in modules. Build anything from scripts to servers.
     </p>
+
     <div class="hero-buttons">
       <a href="#install" class="btn btn-primary">Get Started</a>
-      <a href="#example" class="btn btn-secondary">See Examples</a>
+      <a href="#examples" class="btn btn-secondary">See Examples</a>
+      <a href="https://courses.redteamleaders.com/courses/884e3471-6a52-4c44-9009-3b9f505140e2" target="_blank" class="btn btn-course">Learn Yen</a>
     </div>
 
     <div class="stats">
-      <div class="stat-card">
-        <div class="stat-number" data-target="12">0</div>
-        <div class="stat-label">Standard Libraries</div>
+      <div class="stat">
+        <div class="stat-value">12+</div>
+        <div class="stat-label">Stdlib Modules</div>
       </div>
-      <div class="stat-card">
-        <div class="stat-number">AOT</div>
-        <div class="stat-label">LLVM Compilation</div>
+      <div class="stat">
+        <div class="stat-value">16+</div>
+        <div class="stat-label">Higher-Order Fns</div>
       </div>
-      <div class="stat-card">
-        <div class="stat-number">95%</div>
-        <div class="stat-label">C Performance</div>
+      <div class="stat">
+        <div class="stat-value">6</div>
+        <div class="stat-label">Import Modules</div>
       </div>
-      <div class="stat-card">
-        <div class="stat-number">0</div>
-        <div class="stat-label">Garbage Collection</div>
+      <div class="stat">
+        <div class="stat-value">39</div>
+        <div class="stat-label">Tests Passing</div>
       </div>
     </div>
   </section>
 
   <main>
-    <section id="about">
-      <h2>Why YEN?</h2>
-      <p style="color: var(--fg-muted); font-size: 1.1rem; max-width: 800px;">
-        YEN is designed for developers who want the performance of systems programming with the expressiveness of modern languages.
-        It combines zero-cost abstractions, memory safety without garbage collection, and a powerful type system.
-      </p>
-    </section>
-
+    <!-- Features -->
     <section id="features">
-      <h2>Features</h2>
-      <div class="feature-grid">
-        <div class="feature-card">
-          <div class="feature-icon">🎯</div>
-          <div class="feature-title">Pattern Matching</div>
-          <div class="feature-desc">
-            Powerful pattern matching with guards, ranges, and destructuring for expressive code flow control.
-          </div>
-        </div>
+      <div class="container">
+        <div class="section-label">Features</div>
+        <h2>Everything you need,<br>nothing you don't.</h2>
+        <p class="section-desc">
+          Yen combines the best ideas from modern languages into a clean, expressive syntax that gets out of your way.
+        </p>
 
-        <div class="feature-card">
-          <div class="feature-icon">⚡</div>
-          <div class="feature-title">Zero-Cost Abstractions</div>
-          <div class="feature-desc">
-            High-level features that compile down to efficient machine code with no runtime overhead.
+        <div class="feature-grid">
+          <div class="feature-card">
+            <div class="feature-icon">&#x03BB;</div>
+            <div class="feature-title">Lambdas & Closures</div>
+            <div class="feature-desc">
+              First-class functions with concise <code style="color:var(--accent);font-size:0.85rem;">|x| x * 2</code> syntax. Support expression bodies, block bodies, default parameters, and full closures.
+            </div>
           </div>
-        </div>
 
-        <div class="feature-card">
-          <div class="feature-icon">🛡️</div>
-          <div class="feature-title">Memory Safety</div>
-          <div class="feature-desc">
-            RAII-style defer statements and ownership system prevent memory leaks and data races.
+          <div class="feature-card">
+            <div class="feature-icon warm">&#x2B21;</div>
+            <div class="feature-title">Pattern Matching</div>
+            <div class="feature-desc">
+              Powerful <code style="color:var(--accent);font-size:0.85rem;">match</code> expressions with literal patterns, ranges, guards, and wildcards for expressive control flow.
+            </div>
           </div>
-        </div>
 
-        <div class="feature-card">
-          <div class="feature-icon">🚀</div>
-          <div class="feature-title">LLVM Backend</div>
-          <div class="feature-desc">
-            Compile to native executables with world-class optimizations from the LLVM compiler infrastructure.
+          <div class="feature-card">
+            <div class="feature-icon green">&#x27A4;</div>
+            <div class="feature-title">Pipe Operator</div>
+            <div class="feature-desc">
+              Chain transformations naturally with <code style="color:var(--accent);font-size:0.85rem;">data |&gt; transform |&gt; output</code>. Makes data pipelines readable and composable.
+            </div>
           </div>
-        </div>
 
-        <div class="feature-card">
-          <div class="feature-icon">📦</div>
-          <div class="feature-title">Rich Standard Library</div>
-          <div class="feature-desc">
-            12+ modules including IO, networking, crypto, encoding, and system operations out of the box.
+          <div class="feature-card">
+            <div class="feature-icon pink">&#x26A1;</div>
+            <div class="feature-title">Goroutines & Channels</div>
+            <div class="feature-desc">
+              Spawn concurrent tasks with <code style="color:var(--accent);font-size:0.85rem;">go</code> and communicate safely through buffered channels. Built-in async module.
+            </div>
           </div>
-        </div>
 
-        <div class="feature-card">
-          <div class="feature-icon">🔧</div>
-          <div class="feature-title">Dual Execution</div>
-          <div class="feature-desc">
-            Fast iteration with the interpreter or deploy with the AOT compiler for maximum performance.
+          <div class="feature-card">
+            <div class="feature-icon">&#x7B; &#x7D;</div>
+            <div class="feature-title">Structs, Classes & Enums</div>
+            <div class="feature-desc">
+              Full OOP support with structs, classes with constructors and methods, enum types, and <code style="color:var(--accent);font-size:0.85rem;">this</code> binding.
+            </div>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon warm">&#x2026;</div>
+            <div class="feature-title">Spread & Destructuring</div>
+            <div class="feature-desc">
+              Unpack lists with <code style="color:var(--accent);font-size:0.85rem;">[...a, ...b]</code>, destructure with <code style="color:var(--accent);font-size:0.85rem;">let [x, y] = list</code>, and spread args in function calls.
+            </div>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon green">&#x21BA;</div>
+            <div class="feature-title">Higher-Order Functions</div>
+            <div class="feature-desc">
+              16+ built-in HOFs: map, filter, reduce, sort_by, flat_map, zip, enumerate, group_by, take, drop, and more.
+            </div>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon pink">&#x26A0;</div>
+            <div class="feature-title">Try/Catch & Defer</div>
+            <div class="feature-desc">
+              Structured error handling with try/catch/finally blocks. RAII-style <code style="color:var(--accent);font-size:0.85rem;">defer</code> for automatic cleanup on scope exit.
+            </div>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">&#x2318;</div>
+            <div class="feature-title">Shell Integration</div>
+            <div class="feature-desc">
+              Execute system commands with <code style="color:var(--accent);font-size:0.85rem;">process_shell()</code>, manage files, environment variables, and automate OS tasks natively.
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section id="install">
-      <h2>Getting Started</h2>
-      <div class="install-steps">
-        <div class="step">
-          <div class="step-number">1</div>
-          <h3>Clone Repository</h3>
-          <p>Get the latest version from GitHub</p>
-          <code>git clone https://github.com/yen-lang/Yen</code>
-        </div>
+    <!-- Code Examples -->
+    <section id="examples">
+      <div class="container">
+        <div class="section-label">Examples</div>
+        <h2>Expressive by design.</h2>
+        <p class="section-desc">
+          See how Yen makes complex tasks simple with clean, readable syntax.
+        </p>
 
-        <div class="step">
-          <div class="step-number">2</div>
-          <h3>Build</h3>
-          <p>Compile using CMake</p>
-          <code>mkdir build && cd build<br>cmake .. && make</code>
-        </div>
+        <div class="code-showcase">
+          <div class="terminal">
+            <div class="terminal-header">
+              <div class="terminal-dots">
+                <div class="terminal-dot r"></div>
+                <div class="terminal-dot y"></div>
+                <div class="terminal-dot g"></div>
+              </div>
+              <div class="terminal-title">fundamentals.yen</div>
+            </div>
+            <div class="terminal-body">
+<pre><code><span class="cmt">// Variables: let = immutable, var = mutable</span>
+<span class="kw">let</span> <span class="var">name</span> <span class="op">=</span> <span class="str">"Yen"</span>;
+<span class="kw">var</span> <span class="var">count</span> <span class="op">=</span> <span class="num">0</span>;
+<span class="var">count</span><span class="op">++</span>;
 
-        <div class="step">
-          <div class="step-number">3</div>
-          <h3>Run</h3>
-          <p>Execute your first program</p>
-          <code>./yen hello.yen</code>
-        </div>
-      </div>
-    </section>
-
-    <section id="example">
-      <h2>Code Example</h2>
-      <div class="terminal">
-        <div class="terminal-header">
-          <div class="terminal-btn close"></div>
-          <div class="terminal-btn minimize"></div>
-          <div class="terminal-btn maximize"></div>
-          <div class="terminal-title">hello.yen</div>
-        </div>
-        <div class="terminal-body">
-          <pre><code><span class="comment">// Pattern matching with ranges and guards</span>
-<span class="keyword">match</span> (score) {
-    <span class="number">0</span>..<span class="number">60</span> =&gt; <span class="function">print</span> <span class="string">"F"</span>;
-    <span class="number">60</span>..<span class="number">70</span> =&gt; <span class="function">print</span> <span class="string">"D"</span>;
-    <span class="number">70</span>..<span class="number">80</span> =&gt; <span class="function">print</span> <span class="string">"C"</span>;
-    <span class="number">80</span>..<span class="number">90</span> =&gt; <span class="function">print</span> <span class="string">"B"</span>;
-    <span class="number">90</span>..=<span class="number">100</span> =&gt; <span class="function">print</span> <span class="string">"A"</span>;
-    _ =&gt; <span class="function">print</span> <span class="string">"Invalid"</span>;
+<span class="cmt">// Functions with default parameters</span>
+<span class="kw">func</span> <span class="fn">greet</span>(name, greeting <span class="op">=</span> <span class="str">"Hello"</span>) {
+    <span class="fn">print</span> greeting <span class="op">+</span> <span class="str">", "</span> <span class="op">+</span> name <span class="op">+</span> <span class="str">"!"</span>;
 }
 
-<span class="comment">// Lambda expressions with closures</span>
-<span class="keyword">var</span> multiplier = <span class="number">10</span>;
-<span class="keyword">let</span> multiply = |x| x * multiplier;
-<span class="function">print</span> <span class="function">multiply</span>(<span class="number">5</span>);  <span class="comment">// 50</span>
-
-<span class="comment">// RAII-style resource management</span>
-<span class="keyword">func</span> <span class="function">process</span>() {
-    <span class="keyword">defer</span> <span class="function">print</span> <span class="string">"Cleanup!"</span>;  <span class="comment">// Executes on scope exit</span>
-    <span class="comment">// ... work ...</span>
+<span class="cmt">// Pattern matching with guards</span>
+<span class="kw">match</span> (score) {
+    <span class="num">90</span><span class="op">..=</span><span class="num">100</span>        <span class="op">=></span> <span class="str">"A"</span>;
+    n <span class="kw">when</span> n >= <span class="num">80</span> <span class="op">=></span> <span class="str">"B"</span>;
+    n <span class="kw">when</span> n >= <span class="num">70</span> <span class="op">=></span> <span class="str">"C"</span>;
+    _              <span class="op">=></span> <span class="str">"F"</span>;
 }
 
-<span class="comment">// Shell command execution</span>
-<span class="keyword">var</span> files = <span class="function">process_shell</span>(<span class="string">"ls -la"</span>);
-<span class="function">print</span> files;
+<span class="cmt">// Lambdas and closures</span>
+<span class="kw">let</span> <span class="var">square</span> <span class="op">=</span> <span class="op">|</span>x<span class="op">|</span> x <span class="op">*</span> x;
+<span class="kw">let</span> <span class="var">add</span> <span class="op">=</span> <span class="op">|</span>a, b <span class="op">=</span> <span class="num">10</span><span class="op">|</span> a <span class="op">+</span> b;
 
-<span class="comment">// File I/O</span>
-<span class="keyword">var</span> content = <span class="function">io_read_file</span>(<span class="string">"data.txt"</span>);
-<span class="keyword">var</span> lines = <span class="function">str_split</span>(content, <span class="string">"\n"</span>);
-<span class="keyword">for</span> line <span class="keyword">in</span> lines {
-    <span class="function">log_info</span>(<span class="string">"Processing: "</span> + line);
+<span class="cmt">// Pipe operator</span>
+<span class="kw">let</span> <span class="var">result</span> <span class="op">=</span> <span class="num">5</span> <span class="op">|></span> square <span class="op">|></span> add;</code></pre>
+            </div>
+          </div>
+
+          <div class="terminal">
+            <div class="terminal-header">
+              <div class="terminal-dots">
+                <div class="terminal-dot r"></div>
+                <div class="terminal-dot y"></div>
+                <div class="terminal-dot g"></div>
+              </div>
+              <div class="terminal-title">collections.yen</div>
+            </div>
+            <div class="terminal-body">
+<pre><code><span class="cmt">// Lists with negative indexing & slicing</span>
+<span class="kw">let</span> <span class="var">nums</span> <span class="op">=</span> [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>];
+<span class="fn">print</span> nums[<span class="num">-1</span>];     <span class="cmt">// 5</span>
+<span class="fn">print</span> nums[<span class="num">1</span>:<span class="num">3</span>];    <span class="cmt">// [2, 3]</span>
+
+<span class="cmt">// Higher-order functions</span>
+<span class="kw">let</span> <span class="var">evens</span> <span class="op">=</span> <span class="fn">filter</span>(nums, <span class="op">|</span>x<span class="op">|</span> x <span class="op">%</span> <span class="num">2</span> <span class="op">==</span> <span class="num">0</span>);
+<span class="kw">let</span> <span class="var">doubled</span> <span class="op">=</span> <span class="fn">map</span>(nums, <span class="op">|</span>x<span class="op">|</span> x <span class="op">*</span> <span class="num">2</span>);
+<span class="kw">let</span> <span class="var">total</span> <span class="op">=</span> <span class="fn">reduce</span>(nums, <span class="num">0</span>, <span class="op">|</span>a, b<span class="op">|</span> a <span class="op">+</span> b);
+
+<span class="cmt">// Maps and destructuring</span>
+<span class="kw">let</span> <span class="var">user</span> <span class="op">=</span> {<span class="str">"name"</span>: <span class="str">"Alice"</span>, <span class="str">"age"</span>: <span class="num">30</span>};
+
+<span class="kw">for</span> [key, val] <span class="kw">in</span> <span class="fn">map_entries</span>(user) {
+    <span class="fn">print</span> key <span class="op">+</span> <span class="str">": "</span> <span class="op">+</span> <span class="fn">str</span>(val);
+}
+
+<span class="cmt">// Spread operator</span>
+<span class="kw">let</span> <span class="var">a</span> <span class="op">=</span> [<span class="num">1</span>, <span class="num">2</span>];
+<span class="kw">let</span> <span class="var">b</span> <span class="op">=</span> [<span class="num">3</span>, <span class="num">4</span>];
+<span class="kw">let</span> <span class="var">merged</span> <span class="op">=</span> [<span class="op">...</span>a, <span class="op">...</span>b]; <span class="cmt">// [1,2,3,4]</span>
+
+<span class="cmt">// Ternary & null coalescing</span>
+<span class="kw">let</span> <span class="var">label</span> <span class="op">=</span> total <span class="op">></span> <span class="num">10</span> <span class="op">?</span> <span class="str">"big"</span> <span class="op">:</span> <span class="str">"small"</span>;
+<span class="kw">let</span> <span class="var">val</span> <span class="op">=</span> <span class="fn">find</span>(nums, <span class="op">|</span>x<span class="op">|</span> x <span class="op">></span> <span class="num">99</span>) <span class="op">??</span> <span class="num">0</span>;</code></pre>
+            </div>
+          </div>
+
+          <div class="terminal">
+            <div class="terminal-header">
+              <div class="terminal-dots">
+                <div class="terminal-dot r"></div>
+                <div class="terminal-dot y"></div>
+                <div class="terminal-dot g"></div>
+              </div>
+              <div class="terminal-title">oop.yen</div>
+            </div>
+            <div class="terminal-body">
+<pre><code><span class="cmt">// Structs</span>
+<span class="kw">struct</span> <span class="type">Point</span> { x; y; }
+<span class="kw">let</span> <span class="var">p</span> <span class="op">=</span> <span class="type">Point</span> { x: <span class="num">10</span>, y: <span class="num">20</span> };
+
+<span class="cmt">// Classes with methods</span>
+<span class="kw">class</span> <span class="type">Person</span> {
+    <span class="kw">let</span> name;
+    <span class="kw">let</span> age;
+
+    <span class="kw">func</span> <span class="fn">init</span>(name, age) {
+        <span class="kw">this</span>.name <span class="op">=</span> name;
+        <span class="kw">this</span>.age <span class="op">=</span> age;
+    }
+
+    <span class="kw">func</span> <span class="fn">greet</span>() {
+        <span class="fn">print</span> <span class="str">"Hi, I'm "</span> <span class="op">+</span> <span class="kw">this</span>.name;
+    }
+}
+
+<span class="cmt">// Enums</span>
+<span class="kw">enum</span> <span class="type">Color</span> { Red, Green, Blue }
+
+<span class="kw">let</span> <span class="var">person</span> <span class="op">=</span> <span class="type">Person</span> { name: <span class="str">"Yen"</span>, age: <span class="num">1</span> };
+person.<span class="fn">greet</span>();</code></pre>
+            </div>
+          </div>
+
+          <div class="terminal">
+            <div class="terminal-header">
+              <div class="terminal-dots">
+                <div class="terminal-dot r"></div>
+                <div class="terminal-dot y"></div>
+                <div class="terminal-dot g"></div>
+              </div>
+              <div class="terminal-title">async_server.yen</div>
+            </div>
+            <div class="terminal-body">
+<pre><code><span class="kw">import</span> <span class="str">'async'</span>;
+<span class="kw">import</span> <span class="str">'net.http'</span>;
+<span class="kw">import</span> <span class="str">'os'</span>;
+
+<span class="cmt">// Goroutines with channels</span>
+<span class="kw">let</span> <span class="var">ch</span> <span class="op">=</span> <span class="fn">chan</span>(<span class="num">10</span>);
+
+<span class="kw">func</span> <span class="fn">producer</span>(channel) {
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="num">0</span>..<span class="num">5</span> {
+        <span class="fn">send</span>(channel, i <span class="op">*</span> <span class="num">10</span>);
+    }
+    <span class="fn">close_chan</span>(channel);
+}
+
+<span class="kw">go</span> <span class="fn">producer</span>(ch);
+
+<span class="cmt">// Error handling with defer</span>
+<span class="kw">func</span> <span class="fn">safe_read</span>(path) {
+    <span class="kw">defer</span> <span class="fn">log_info</span>(<span class="str">"Done reading"</span>);
+    <span class="kw">try</span> {
+        <span class="kw">return</span> <span class="fn">io_read_file</span>(path);
+    } <span class="kw">catch</span> (e) {
+        <span class="fn">log_error</span>(<span class="str">"Failed: "</span> <span class="op">+</span> e);
+        <span class="kw">return</span> <span class="type">None</span>;
+    }
 }</code></pre>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
+    <!-- Modules -->
+    <section id="modules">
+      <div class="container">
+        <div class="section-label">Modules</div>
+        <h2>Batteries included.</h2>
+        <p class="section-desc">
+          12 built-in standard library modules plus 6 importable modules cover everything from math to networking.
+        </p>
+
+        <h3 style="font-size:1rem;color:var(--fg-muted);margin-bottom:1rem;font-weight:600;">Standard Library</h3>
+        <div class="modules-grid" style="margin-bottom:2.5rem;">
+          <div class="module-card">
+            <div class="module-icon">&#x1D453;</div>
+            <div class="module-name">math</div>
+            <div class="module-desc">Trig, random, pow, sqrt</div>
+          </div>
+          <div class="module-card">
+            <div class="module-icon">&#x0041;</div>
+            <div class="module-name">string</div>
+            <div class="module-desc">Split, join, trim, replace</div>
+          </div>
+          <div class="module-card">
+            <div class="module-icon">&#x25A4;</div>
+            <div class="module-name">collections</div>
+            <div class="module-desc">Push, sort, flatten, unique</div>
+          </div>
+          <div class="module-card">
+            <div class="module-icon">&#x2B55;</div>
+            <div class="module-name">core</div>
+            <div class="module-desc">Type checking & conversion</div>
+          </div>
+          <div class="module-card">
+            <div class="module-icon">&#x1F4C4;</div>
+            <div class="module-name">io</div>
+            <div class="module-desc">Read, write, append files</div>
+          </div>
+          <div class="module-card">
+            <div class="module-icon">&#x1F4C1;</div>
+            <div class="module-name">filesystem</div>
+            <div class="module-desc">Exists, mkdir, remove, size</div>
+          </div>
+          <div class="module-card">
+            <div class="module-icon">&#x231A;</div>
+            <div class="module-name">time</div>
+            <div class="module-desc">Timestamps and sleep</div>
+          </div>
+          <div class="module-card">
+            <div class="module-icon">&#x1F512;</div>
+            <div class="module-name">crypto</div>
+            <div class="module-desc">XOR, hash, random bytes</div>
+          </div>
+          <div class="module-card">
+            <div class="module-icon">&#x1F504;</div>
+            <div class="module-name">encoding</div>
+            <div class="module-desc">Base64 and hex encoding</div>
+          </div>
+          <div class="module-card">
+            <div class="module-icon">&#x1F4DD;</div>
+            <div class="module-name">log</div>
+            <div class="module-desc">Info, warn, error logging</div>
+          </div>
+          <div class="module-card">
+            <div class="module-icon">&#x2699;</div>
+            <div class="module-name">env</div>
+            <div class="module-desc">Environment variables</div>
+          </div>
+          <div class="module-card">
+            <div class="module-icon">&#x1F4BB;</div>
+            <div class="module-name">process</div>
+            <div class="module-desc">Shell exec, spawn, cwd</div>
+          </div>
+        </div>
+
+        <h3 style="font-size:1rem;color:var(--fg-muted);margin-bottom:1rem;font-weight:600;">Import Modules</h3>
+        <div class="modules-grid">
+          <div class="module-card">
+            <div class="module-icon">&#x2699;</div>
+            <div class="module-name">async</div>
+            <div class="module-desc">Goroutines & channels</div>
+          </div>
+          <div class="module-card">
+            <div class="module-icon">&#x002A;</div>
+            <div class="module-name">regex</div>
+            <div class="module-desc">Match, search, replace</div>
+          </div>
+          <div class="module-card">
+            <div class="module-icon">&#x1F310;</div>
+            <div class="module-name">net.socket</div>
+            <div class="module-desc">TCP & UDP sockets</div>
+          </div>
+          <div class="module-card">
+            <div class="module-icon">&#x1F4E1;</div>
+            <div class="module-name">net.http</div>
+            <div class="module-desc">HTTP server & URL encode</div>
+          </div>
+          <div class="module-card">
+            <div class="module-icon">&#x1F5A5;</div>
+            <div class="module-name">os</div>
+            <div class="module-desc">Platform, exec, filesystem</div>
+          </div>
+          <div class="module-card">
+            <div class="module-icon">&#x1F517;</div>
+            <div class="module-name">net</div>
+            <div class="module-desc">General networking</div>
+          </div>
+        </div>
+
+        <div style="margin-top:3rem;">
+          <h3 style="font-size:1rem;color:var(--fg-muted);margin-bottom:1rem;font-weight:600;">Higher-Order Functions</h3>
+          <div class="hof-grid">
+            <div class="hof-item">map</div>
+            <div class="hof-item">filter</div>
+            <div class="hof-item">reduce</div>
+            <div class="hof-item">foreach</div>
+            <div class="hof-item">sort_by</div>
+            <div class="hof-item">find</div>
+            <div class="hof-item">any</div>
+            <div class="hof-item">all</div>
+            <div class="hof-item">flat_map</div>
+            <div class="hof-item">zip</div>
+            <div class="hof-item">enumerate</div>
+            <div class="hof-item">take</div>
+            <div class="hof-item">drop</div>
+            <div class="hof-item">map_filter</div>
+            <div class="hof-item">group_by</div>
+            <div class="hof-item">map_map_values</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Course -->
+    <section id="course">
+      <div class="container">
+        <div class="course-banner">
+          <div class="course-content">
+            <div class="course-label">Official Course</div>
+            <h3>Yen Language Programming for Beginners</h3>
+            <p>
+              Start your journey with Yen from scratch. This course covers the fundamentals of the language, from variables and functions to pattern matching, lambdas, and building real projects.
+            </p>
+            <div class="course-features">
+              <div class="course-feat"><span class="check">&#x2713;</span> Beginner-friendly</div>
+              <div class="course-feat"><span class="check">&#x2713;</span> Hands-on examples</div>
+              <div class="course-feat"><span class="check">&#x2713;</span> Full language coverage</div>
+              <div class="course-feat"><span class="check">&#x2713;</span> Project-based</div>
+            </div>
+            <a href="https://courses.redteamleaders.com/courses/884e3471-6a52-4c44-9009-3b9f505140e2" target="_blank" class="btn btn-course">
+              Start Learning
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Install -->
+    <section id="install">
+      <div class="container">
+        <div class="section-label">Getting Started</div>
+        <h2>Up and running in 60 seconds.</h2>
+        <p class="section-desc">
+          Clone, build, and run your first Yen program.
+        </p>
+
+        <div class="install-grid">
+          <div class="install-step">
+            <div class="step-num">01</div>
+            <h3>Clone</h3>
+            <p>Get the latest source from GitHub</p>
+            <code>git clone https://github.com/yen-lang/Yen.git</code>
+          </div>
+          <div class="install-step">
+            <div class="step-num">02</div>
+            <h3>Build</h3>
+            <p>Compile with CMake</p>
+            <code>cd Yen && mkdir build && cd build<br>cmake .. && make yen</code>
+          </div>
+          <div class="install-step">
+            <div class="step-num">03</div>
+            <h3>Run</h3>
+            <p>Execute your first program</p>
+            <code>./yen hello.yen</code>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Docs -->
     <section id="docs">
-      <h2>Documentation</h2>
-      <div class="feature-grid">
-        <div class="feature-card">
-          <div class="feature-icon">📖</div>
-          <div class="feature-title">Language Syntax</div>
-          <div class="feature-desc">
-            Complete reference for YEN's syntax, from variables to advanced pattern matching.
-          </div>
-          <a href="docs/SYNTAX.md" class="btn btn-secondary" style="margin-top: 1rem; display: inline-block;">Read Docs →</a>
-        </div>
+      <div class="container">
+        <div class="section-label">Documentation</div>
+        <h2>Learn more.</h2>
+        <p class="section-desc">
+          Comprehensive guides and references for everything in Yen.
+        </p>
 
-        <div class="feature-card">
-          <div class="feature-icon">📚</div>
-          <div class="feature-title">Standard Library</div>
-          <div class="feature-desc">
-            Explore all 12 built-in modules with examples and API references.
-          </div>
-          <a href="docs/STDLIB.md" class="btn btn-secondary" style="margin-top: 1rem; display: inline-block;">View API →</a>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">💻</div>
-          <div class="feature-title">Examples</div>
-          <div class="feature-desc">
-            Learn from real-world examples covering shell automation, networking, and more.
-          </div>
-          <a href="examples/" class="btn btn-secondary" style="margin-top: 1rem; display: inline-block;">Browse →</a>
+        <div class="docs-grid">
+          <a href="docs/SYNTAX.md" class="doc-card">
+            <h3>Language Syntax</h3>
+            <p>Complete reference for variables, functions, control flow, pattern matching, OOP, and all operators.</p>
+            <span class="arrow">Read docs &#x2192;</span>
+          </a>
+          <a href="docs/STDLIB.md" class="doc-card">
+            <h3>Standard Library</h3>
+            <p>API reference for all 12+ built-in modules with examples and function signatures.</p>
+            <span class="arrow">View API &#x2192;</span>
+          </a>
+          <a href="docs/QUICKSTART.md" class="doc-card">
+            <h3>Quick Start Guide</h3>
+            <p>Get up and running fast with a guided walkthrough of Yen's core features.</p>
+            <span class="arrow">Get started &#x2192;</span>
+          </a>
+          <a href="docs/USING_YEN.md" class="doc-card">
+            <h3>Using Yen</h3>
+            <p>Practical guide to writing scripts, shell integration, and building real applications.</p>
+            <span class="arrow">Read guide &#x2192;</span>
+          </a>
         </div>
       </div>
     </section>
   </main>
 
+  <!-- Footer -->
   <footer>
-    <p>Built with ❤️ by the YEN Language team</p>
-    <p style="font-size: 0.9rem;">Licensed under MIT • © 2025 YEN Programming Language</p>
-    <div class="social-links">
-      <a href="https://github.com/yen-lang/Yen" target="_blank" title="GitHub">⭐</a>
-      <a href="https://github.com/yen-lang/Yen/issues" target="_blank" title="Issues">🐛</a>
-      <a href="https://github.com/yen-lang/Yen/discussions" target="_blank" title="Discussions">💬</a>
+    <div class="footer-inner">
+      <div class="footer-left">
+        <p>YEN Programming Language</p>
+        <p>MIT License &middot; 2025</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/yen-lang/Yen" target="_blank">GitHub</a>
+        <a href="https://github.com/yen-lang/Yen/issues" target="_blank">Issues</a>
+        <a href="https://github.com/yen-lang/Yen/discussions" target="_blank">Discussions</a>
+        <a href="https://courses.redteamleaders.com/courses/884e3471-6a52-4c44-9009-3b9f505140e2" target="_blank">Course</a>
+      </div>
     </div>
   </footer>
 
   <script>
-    // Scroll animations
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -100px 0px'
-    };
-
+    // Intersection Observer for section animations
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
         }
       });
-    }, observerOptions);
+    }, { threshold: 0.08, rootMargin: '0px 0px -60px 0px' });
 
-    document.querySelectorAll('section').forEach(section => {
-      observer.observe(section);
-    });
+    document.querySelectorAll('main section').forEach(s => observer.observe(s));
 
-    // Header scroll effect
+    // Header scroll
     const header = document.getElementById('header');
+    let ticking = false;
     window.addEventListener('scroll', () => {
-      if (window.scrollY > 50) {
-        header.classList.add('scrolled');
-      } else {
-        header.classList.remove('scrolled');
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          header.classList.toggle('scrolled', window.scrollY > 40);
+          ticking = false;
+        });
+        ticking = true;
       }
     });
 
-    // Animated counters
-    const animateCounter = (element) => {
-      const target = parseInt(element.getAttribute('data-target'));
-      const duration = 2000;
-      const increment = target / (duration / 16);
-      let current = 0;
-
-      const updateCounter = () => {
-        current += increment;
-        if (current < target) {
-          element.textContent = Math.floor(current);
-          requestAnimationFrame(updateCounter);
-        } else {
-          element.textContent = target;
-        }
-      };
-
-      updateCounter();
-    };
-
-    // Trigger counters when visible
-    const statsObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const counter = entry.target.querySelector('[data-target]');
-          if (counter && !counter.classList.contains('animated')) {
-            counter.classList.add('animated');
-            animateCounter(counter);
-          }
-        }
-      });
-    }, { threshold: 0.5 });
-
-    document.querySelectorAll('.stat-card').forEach(card => {
-      statsObserver.observe(card);
-    });
-
-    // Smooth scroll for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', (e) => {
         e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-          target.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-          });
+        const el = document.querySelector(a.getAttribute('href'));
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          // Close mobile nav
+          document.querySelector('nav').classList.remove('open');
         }
       });
     });
 
-    // Typing effect for hero
-    const cursorElement = document.querySelector('.typing-cursor');
-    setInterval(() => {
-      cursorElement.style.opacity = cursorElement.style.opacity === '0' ? '1' : '0';
-    }, 500);
-
-    // Add parallax effect to background
-    window.addEventListener('scroll', () => {
-      const scrolled = window.pageYOffset;
-      const bg = document.querySelector('.bg-animation');
-      bg.style.transform = `translateY(${scrolled * 0.5}px)`;
-    });
-
-    // Terminal code typing effect (optional, commented out for performance)
-    /*
-    const terminalBody = document.querySelector('.terminal-body code');
-    const originalText = terminalBody.innerHTML;
-    terminalBody.innerHTML = '';
-
-    let i = 0;
-    const typeWriter = () => {
-      if (i < originalText.length) {
-        terminalBody.innerHTML += originalText.charAt(i);
-        i++;
-        setTimeout(typeWriter, 10);
+    // Close mobile nav on outside click
+    document.addEventListener('click', (e) => {
+      const nav = document.querySelector('nav');
+      const toggle = document.querySelector('.menu-toggle');
+      if (!nav.contains(e.target) && !toggle.contains(e.target)) {
+        nav.classList.remove('open');
       }
-    };
-
-    const terminalObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting && !entry.target.classList.contains('typed')) {
-          entry.target.classList.add('typed');
-          typeWriter();
-        }
-      });
-    }, { threshold: 0.5 });
-
-    terminalObserver.observe(document.querySelector('.terminal'));
-    */
+    });
   </script>
 </body>
 </html>
